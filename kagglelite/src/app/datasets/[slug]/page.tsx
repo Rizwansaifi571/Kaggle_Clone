@@ -25,7 +25,18 @@ export default function DatasetDetail() {
   };
 
   const handleDownload = () => {
-    alert('Dummy download started!');
+    const header = data.columns.map((c: any) => c.name).join(',');
+    const rows = Array.from({length: 10}).map((_, i) => 
+      data.columns.map((c: any) => c.type === 'string' ? `"Value ${i}"` : i).join(',')
+    ).join('\n');
+    const csv = `${header}\n${rows}`;
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.dataset.slug}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   if (!data) return <div className="py-10 text-center">Loading...</div>;
@@ -80,6 +91,22 @@ export default function DatasetDetail() {
                 ))}
               </tbody>
             </table>
+
+            <h3 className="text-lg font-bold mt-8 mb-4">Data Preview</h3>
+            <div className="overflow-x-auto border border-gray-200 rounded-lg">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-gray-50">
+                  <tr>{columns.map((c: any) => <th key={c.id} className="p-3 border-b">{c.name}</th>)}</tr>
+                </thead>
+                <tbody>
+                  {Array.from({length: 10}).map((_, i) => (
+                    <tr key={i} className="border-b last:border-b-0 hover:bg-gray-50">
+                      {columns.map((c: any) => <td key={c.id} className="p-3 text-gray-700">{c.type === 'string' ? `Value ${i}` : i}</td>)}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
         {activeTab === 'Code' && <div>Related notebooks...</div>}

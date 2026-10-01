@@ -26,6 +26,7 @@ function seed() {
     DROP TABLE IF EXISTS dataset_columns;
     DROP TABLE IF EXISTS datasets;
     DROP TABLE IF EXISTS leaderboard;
+    DROP TABLE IF EXISTS submissions;
     DROP TABLE IF EXISTS competition_members;
     DROP TABLE IF EXISTS competitions;
     DROP TABLE IF EXISTS course_progress;
@@ -55,6 +56,17 @@ function seed() {
       deadline DATETIME,
       teams_count INTEGER DEFAULT 0,
       tags TEXT
+    );
+
+    CREATE TABLE submissions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      competition_id INTEGER NOT NULL,
+      score REAL,
+      description TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id),
+      FOREIGN KEY (competition_id) REFERENCES competitions (id)
     );
 
     CREATE TABLE leaderboard (
@@ -182,12 +194,12 @@ function seed() {
     );
   `);
 
-  const insertUser = db.prepare('INSERT INTO users (username, email, password_hash, tier) VALUES (?, ?, ?, ?)');
+  const insertUser = db.prepare('INSERT INTO users (username, email, password_hash, tier, email_verified) VALUES (?, ?, ?, ?, ?)');
   const defaultPassword = bcrypt.hashSync('password123', 10);
   
-  insertUser.run('demo', 'demo@kagglelite.com', defaultPassword, 'Master');
+  insertUser.run('demo', 'demo@kagglelite.com', defaultPassword, 'Master', 1);
   for (let i = 1; i <= 14; i++) {
-    insertUser.run(`user${i}`, `user${i}@test.com`, defaultPassword, i % 3 === 0 ? 'Expert' : 'Novice');
+    insertUser.run(`user${i}`, `user${i}@test.com`, defaultPassword, i % 3 === 0 ? 'Expert' : 'Novice', 1);
   }
 
   const insertComp = db.prepare('INSERT INTO competitions (slug, title, subtitle, description, prize, category, deadline, teams_count, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');

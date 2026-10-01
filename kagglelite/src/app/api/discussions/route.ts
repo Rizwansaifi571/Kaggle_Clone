@@ -9,3 +9,18 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Failed to fetch discussions' }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const session = await import('@/lib/auth').then(m => m.getUserSession());
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const body = await request.json();
+    if (!body.title || !body.body || !body.category) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+
+    const info = db.prepare('INSERT INTO discussions (title, body, author_id, category) VALUES (?, ?, ?, ?)').run(body.title, body.body, session.userId, body.category);
+    return NextResponse.json({ success: true, id: info.lastInsertRowid });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to create discussion' }, { status: 500 });
+  }
+}

@@ -1,0 +1,121 @@
+================================================================================
+1. TITLE AND OVERVIEW
+================================================================================
+Project Name: KaggleLite
+Description: A high-performance, full-stack Kaggle clone built to replicate the core features of the Kaggle data science platform. It features a complete authentication system with JWTs and Argon2 hashing, interactive mock competitions with leaderboards, and an extensible Next.js App Router architecture.
+Date: October 1, 2026
+Tools used: AI coding assistants (GitHub Copilot / Antigravity / Claude for prompt writing).
+
+================================================================================
+2. REQUIREMENTS GIVEN
+================================================================================
+- Build a Kaggle-style frontend and backend.
+- Technology Stack: Next.js (App Router), TypeScript, Tailwind CSS.
+- Database: SQLite via better-sqlite3 using a local file (./data/kagglelite.db).
+- Auth: JWT/Cookie-based authentication system built natively without external providers.
+- Data: Dummy data populated by a seed script. No real file uploads or external APIs.
+- UI/UX: Design must closely match kaggle.com, featuring a clean white background, Kaggle blue accents, and specific responsive layout constraints.
+
+================================================================================
+3. PROMPT 1: INITIAL BUILD
+================================================================================
+[PASTE FULL PROMPT 1 HERE]
+
+================================================================================
+4. PROMPT 2: FEATURE COMPLETION AND POLISH
+================================================================================
+[PASTE FULL PROMPT 2 HERE]
+
+================================================================================
+5. PROMPT 3: PREMIUM AUTHENTICATION
+================================================================================
+[PASTE FULL PROMPT 3 HERE]
+
+================================================================================
+6. WHAT WAS BUILT
+================================================================================
+Database Schema (SQLite via better-sqlite3):
+- users, oauth_accounts, sessions, audit_logs
+- email_verification_tokens, password_reset_tokens
+- competitions, datasets, notebooks, discussions, models, courses, course_progress
+- dev_outbox (for local email simulation)
+
+API Endpoints (Next.js Route Handlers):
+- Auth / Security:
+  - POST /api/auth/register
+  - POST /api/auth/login
+  - POST /api/auth/logout
+  - POST /api/auth/refresh (Opaque token rotation)
+  - GET  /api/auth/me
+  - POST /api/auth/verify-email
+  - POST /api/auth/forgot-password
+  - POST /api/auth/reset-password
+  - POST /api/auth/change-password
+  - GET  /api/auth/sessions
+  - DELETE /api/auth/sessions/[id]
+  - POST /api/auth/2fa/setup
+  - POST /api/auth/2fa/enable
+  - POST /api/auth/2fa/verify-login
+  - GET  /api/auth/oauth/github
+  - GET  /api/auth/oauth/github/callback
+  - GET  /api/auth/check-username
+  - GET  /api/auth/check-email
+- Core Entities:
+  - GET  /api/search
+  - GET  /api/competitions, /api/competitions/[slug]
+  - POST /api/competitions/[slug]/join
+  - GET  /api/competitions/[slug]/leaderboard
+  - GET  /api/datasets, /api/datasets/[slug]
+  - POST /api/datasets/[slug]/upvote
+  - GET  /api/notebooks, /api/notebooks/[slug]
+  - POST /api/notebooks/[slug]/comments
+  - POST /api/notebooks/[slug]/copy
+  - POST /api/notebooks/[slug]/upvote
+  - GET  /api/discussions, /api/discussions/[id]
+  - POST /api/discussions/[id]/upvote
+  - GET  /api/models, /api/models/[slug]
+  - GET  /api/courses, /api/courses/[id]
+  - POST /api/courses/[id]/complete
+  - POST /api/replies/[id]/upvote
+  - GET  /api/users/[username]
+
+Key Features Implemented:
+- Split-screen auth layout using Framer Motion animations.
+- Custom authentication system utilizing Jose (Edge-compatible JWTs), Argon2/Bcryptjs password hashing, sliding-window rate limiting, and Zod schema validation.
+- Live password strength meter and OTP 6-digit input component with paste-handling.
+- Global debounced search system.
+- Interactive competition leaderboards with trending arrows, plus active submission tables.
+- Edge Middleware (src/middleware.ts) for secure route protection.
+- Unit testing setup utilizing Vitest and jsdom.
+
+================================================================================
+7. HOW I USED AI
+================================================================================
+Workflow:
+- I wrote detailed, phased prompts containing strict technical constraints (e.g., specific library requirements, database structure).
+- I provided these prompts sequentially to the AI coding assistant (Antigravity).
+- The AI autonomously generated the file structure, wrote the database migration and seeding scripts, and implemented the full suite of frontend components and REST APIs.
+- After each major phase, the AI executed `npm run build` in the background. When compilation errors arose (such as Suspense boundaries for Next.js router hooks or incorrect package exports), the AI diagnosed and patched the codebase autonomously.
+- I tested the application manually by interacting with the auth flows and UI components.
+
+What I verified or changed myself:
+[I WILL FILL THIS IN]
+
+================================================================================
+8. HOW TO RUN
+================================================================================
+1. Install dependencies:
+   npm install --legacy-peer-deps
+
+2. Initialize and seed the SQLite database:
+   npm run seed
+
+3. Start the development server:
+   npm run dev
+
+4. Access the application:
+   Open http://localhost:3000 in your browser.
+
+Demo Credentials (pre-verified):
+Email: demo@kagglelite.com
+Password: password123

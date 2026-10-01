@@ -15,7 +15,7 @@ export default function Discussions() {
     <div>
       <div className="mb-8 flex justify-between items-center">
         <h1 className="text-3xl font-bold">Discussions</h1>
-        <button className="bg-kaggle-blue text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-colors">New Topic</button>
+        <Link href="/discussions/new" className="bg-kaggle-blue text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-colors block">New Topic</Link>
       </div>
 
       <div className="bg-white border border-kaggle-border rounded-2xl overflow-hidden shadow-sm">

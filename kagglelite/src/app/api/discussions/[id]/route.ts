@@ -13,3 +13,19 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function POST(request: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  try {
+    const session = await import('@/lib/auth').then(m => m.getUserSession());
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const body = await request.json();
+    if (!body.body) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+
+    db.prepare('INSERT INTO replies (discussion_id, author_id, body) VALUES (?, ?, ?)').run(params.id, session.userId, body.body);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
