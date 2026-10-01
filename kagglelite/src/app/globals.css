@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-kaggle-blue: #20BEFF;
+  --color-kaggle-text: #202124;
+  --color-kaggle-border: #e0e0e0;
+  --color-kaggle-bg: #f8f9fa;
+  --color-kaggle-sidebar: #ffffff;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  color: var(--color-kaggle-text);
+  background-color: var(--color-kaggle-bg);
+}
